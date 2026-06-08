@@ -20,12 +20,15 @@ export const useUserSync = () => {
 
     const syncUser = async () => {
       try {
-        const { data } = await authSupabase
+        const { data , error } = await authSupabase
           .from("users")
           .select("clerk_id, is_admin")
           .eq("clerk_id", user.id)
           .single();
-
+        if (error && error.code){
+          console.log("failed to fetch user", error);
+          return;
+        }
         if (data) {
           // user exists
           setIsAdmin(data.is_admin ?? false);
@@ -33,7 +36,7 @@ export const useUserSync = () => {
           return;
         }
 
-        const { data: newUser } = await authSupabase
+        const { data: newUser , error : insertError} = await authSupabase
           .from("users")
           .insert({
             clerk_id: user.id,
@@ -44,7 +47,10 @@ export const useUserSync = () => {
           })
           .select("is_admin")
           .single();
-
+            if (insertError && insertError.code){
+          console.log("failed to create new user", error);
+          return;
+        }
         setIsAdmin(newUser?.is_admin ?? false);
         syncedUserIds.current.add(user.id);
       } catch (error) {

@@ -15,7 +15,7 @@ if (!publishableKey) {
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{flex:1}}>
+    <GestureHandlerRootView>
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar style="dark" />
