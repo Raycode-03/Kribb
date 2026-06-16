@@ -27,6 +27,7 @@ export const useUserSync = () => {
           .single();
         if (error && error.code){
           console.log("failed to fetch user", error);
+          syncedUserIds.current.delete(user.id); // Remove from ref so it can retry later
           return;
         }
         if (data) {
@@ -48,7 +49,7 @@ export const useUserSync = () => {
           .select("is_admin")
           .single();
             if (insertError && insertError.code){
-          console.log("failed to create new user", error);
+          console.log("failed to create new user", insertError);
           return;
         }
         setIsAdmin(newUser?.is_admin ?? false);

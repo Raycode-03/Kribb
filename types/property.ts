@@ -1,3 +1,4 @@
+import { PropertyType } from '../store/filterStore'
 export interface Property{
  id:string;
  title:string;
@@ -15,4 +16,10 @@ export interface Property{
  is_featured: boolean;
  is_sold:boolean;
  created_at:string;
+}
+
+
+export interface FormState extends Omit<Property, 'is_sold' | 'type'> {
+  type: PropertyType,
+  localImages: string[]
 }

@@ -1,21 +1,22 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import React from "react";
-import { Property } from "../types";
 import { useRouter } from "expo-router";
+import React from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Property } from "../../types";
 
 import { Ionicons } from "@expo/vector-icons";
-import { formatPrice } from "../lib/helpers/formatPrice";
+import { formatPrice } from "../../lib/helpers/formatPrice";
+import { useSavedProperty } from "../../hooks/useSavedProperty";
 export default function PropertyCard({
   property,
   onUnsave,
   showSave = false,
 }: {
   property: Property;
-  onUnsave: () => void;
-  showSave: boolean;
+  onUnsave?: () => void;
+  showSave?: boolean;
 }) {
   const router = useRouter();
-  const isSaved = false;
+  const {isSaved , saveLoading , toggleSave} =useSavedProperty(property.id, onUnsave)
   return (
     <TouchableOpacity
       className="flex-row bg-white rounded-3xl overflow-hidden mb-4"
@@ -30,9 +31,11 @@ export default function PropertyCard({
       onPress={() => router.push(`/(root)/property/${property.id}`)}
     >
       <Image
-        source={{uri: 
-            property.images.length>0 ? property.images[0] : 
-            require("@/assets/images/kribb.png")
+        source={{
+          uri:
+            property.images.length > 0
+              ? property.images[0]
+              : require("@/assets/images/kribb.png"),
         }}
         className="w-28 h-28"
         resizeMode="cover"
@@ -67,25 +70,25 @@ export default function PropertyCard({
           )}
           <View className="flex-row gap-3">
             <View className="flex-row items-center gap-1">
-                <Ionicons name="bed-outline" size={11} color="#6B7280" />
-                <Text className="text-xs text-gray-500">
-                    {property.bedrooms} bd
-                </Text>
+              <Ionicons name="bed-outline" size={11} color="#6B7280" />
+              <Text className="text-xs text-gray-500">
+                {property.bedrooms} bd
+              </Text>
             </View>
             <View className="flex-row items-center gap-1">
-                <Ionicons name="expand-outline" size={11} color="#6B7280" />
-                <Text className="text-xs text-gray-500">
-                    {property.area_sqft} ft2
-                </Text>
+              <Ionicons name="expand-outline" size={11} color="#6B7280" />
+              <Text className="text-xs text-gray-500">
+                {property.area_sqft} ft2
+              </Text>
             </View>
           </View>
         </View>
       </View>
-      <TouchableOpacity className="w-10 items-center pt-3">
+      <TouchableOpacity onPress={toggleSave} disabled={saveLoading} className="w-10 items-center pt-3">
         <Ionicons
-            name={isSaved? 'heart': 'heart-outline'}
-            size={18}
-            color={isSaved? '#EF4444': '#9CA3AF'}
+          name={isSaved ? "heart" : "heart-outline"}
+          size={18}
+          color={isSaved ? "#EF4444" : "#9CA3AF"}
         />
       </TouchableOpacity>
     </TouchableOpacity>
