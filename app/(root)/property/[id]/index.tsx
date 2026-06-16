@@ -85,8 +85,8 @@ function PropertyDetails() {
              await authSupabase.
              from("properties")
              .update({is_sold: true})
-             .eq("is"), id
-             setProperty((prev)=>(prev ? {...prev, is_sold : true}))
+             .eq("id",id)
+             setProperty((prev)=>(prev ? {...prev, is_sold : true}: prev))
           }
         }
       ])
